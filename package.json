@@ -17,5 +17,8 @@
     "url": "https://srv-gitea.castel.fr/simonot/NJS.git"
   },
   "author": "Robin Simonot",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.18"
+  }
 }
