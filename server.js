@@ -14,13 +14,13 @@ app.use((req, res, next) => {
 app.use("/url1/url2", (req, res, next) => {
   // here is the middleware (callback)
   res.json({ "Philip J.": "Fry" });
-  console.log("req : ".magenta, req.url);
+  console.log("req => ".magenta, req.url);
 });
 
 // middleware tout fait
 app.use(express.static("."));
 
-app.use(serveIndex("."));
+app.use(serveIndex(".", { icons: true }));
 
 app.listen(3000, () => {
   console.log("> Server started OK !".green);
