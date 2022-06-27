@@ -5,7 +5,8 @@
     "serve-index": "^1.9.1"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon src/server.ts",
+    "build": "tsc"
   },
   "name": "formation_njs",
   "description": "",
@@ -19,6 +20,7 @@
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^2.0.18",
+    "ts-node": "^10.8.1",
     "typescript": "^4.7.4"
   }
 }
