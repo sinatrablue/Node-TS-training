@@ -1,5 +1,5 @@
-const express = require("express");
-const serveIndex = require("serve-index");
+import express from "express";
+import serveIndex from "serve-index";
 
 console.log("\x1b[36m%s\x1b[0m", "Starting the server ...");
 const app = express();
