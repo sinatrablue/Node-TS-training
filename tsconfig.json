@@ -3,7 +3,8 @@
     "outDir": "dist",
     "target": "ES6",
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "allowJs": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules/**/*"]

@@ -1,6 +1,8 @@
 import express from "express";
 import serveIndex from "serve-index";
 
+import { api } from "./api";
+
 console.log("\x1b[36m%s\x1b[0m", "Starting the server ...");
 const app = express();
 // configure server with a middleware
@@ -10,6 +12,8 @@ app.use((req, res, next) => {
   next(); // this middleware forwards to the following one (transition)
 });
 
+app.use("/api", api);
+
 app.use("/url1/url2", (req, res, next) => {
   // here is the middleware (callback)
   res.json({ "Philip J.": "Fry" });
@@ -18,7 +22,10 @@ app.use("/url1/url2", (req, res, next) => {
 });
 
 app.use((req, res, next) => {
-  console.log("\x1b[34m%s\x1b[0m", "=====================================");
+  console.log(
+    "\x1b[34m%s\x1b[0m",
+    "================================================"
+  );
 });
 
 // middleware tout fait
