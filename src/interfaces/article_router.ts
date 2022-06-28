@@ -3,3 +3,5 @@ export interface Article {
   name: string;
   price: number;
 }
+
+export type NewArticle = Omit<Article, "id">;

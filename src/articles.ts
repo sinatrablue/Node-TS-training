@@ -42,4 +42,14 @@ app.post("/", (req, res) => {
   }
 });
 
+app.delete("/", (req, res) => {
+  try {
+    articles.length = 0;
+    res.status(204).end();
+  } catch (err) {
+    console.log("err :::> ", err);
+    res.status(500).end();
+  }
+});
+
 export const articlesRouter = app;
