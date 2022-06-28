@@ -31,10 +31,15 @@ app.get("/:id", (req, res) => {
 app.use(express.json());
 
 app.post("/", (req, res) => {
-  const art = req.body as Article; // We suppose that it's an Article, no checks gonna be made
-  art.id = generateId();
-  articles.push(art);
-  res.status(200).json(art.id);
+  try {
+    const art = req.body as Article; // We suppose that it's an Article, no checks gonna be made
+    art.id = generateId();
+    articles.push(art);
+    res.status(200).json(art.id);
+  } catch (err) {
+    console.log("err :::> ", err);
+    res.status(500).end();
+  }
 });
 
 export const articlesRouter = app;
