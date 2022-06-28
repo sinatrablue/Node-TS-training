@@ -7,7 +7,7 @@ describe("WebServer", () => {
     const webServer = new WebServer({ port: 23456 });
     await webServer.start(); // You don't know how much time it's gonna take
     // Test that is the start is OK by doing an HTTP request
-    let response = await axios.get("http://localhost:23456/api/ping"); // You don't know how much time it's gonna take
+    const response = await axios.get("http://localhost:23456/api/ping"); // You don't know how much time it's gonna take
     assert(response.status === 200);
     webServer.stop();
     // Test that it is well stopped

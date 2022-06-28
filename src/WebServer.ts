@@ -1,14 +1,15 @@
-import express, { Express } from "express";
+import express from "express";
+import { createServer, Server } from "http";
 import serveIndex from "serve-index";
 import { api } from "./api";
 import { WebServerOptions } from "./interfaces/WebServerOptions";
-import { Server, createServer } from "http";
 
 export class WebServer {
   options: WebServerOptions = {
     port: 3000,
   };
   server: Server;
+
   constructor(options?: WebServerOptions) {
     this.options = { ...this.options, ...options }; // takes all properties in options AND in this.options and spread them into the new object
     // if some properties in options have the same key than some in this.options, those coming from options (second in the list) will take advantage
@@ -31,7 +32,7 @@ export class WebServer {
       next();
     });
 
-    app.use((req, res, next) => {
+    app.use((/*req, res, next*/) => {
       console.log(
         "\x1b[34m%s\x1b[0m",
         "================================================"
@@ -70,7 +71,7 @@ export class WebServer {
           reject(err);
           return;
         }
-        console.log("\x1b[34m%s\x1b[0m", "Server Closed !");
+        console.log("\x1b[34m%s\x1b[0m", "> Server Closed !");
         resolve();
       });
     });
