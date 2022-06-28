@@ -13,7 +13,7 @@ describe("WebServer", () => {
     // Test that it is well stopped
     let error = undefined;
     try {
-      response = await axios.get("http://localhost:23456/api/ping"); // You don't know how much time it's gonna take
+      await axios.get("http://localhost:23456/api/ping"); // You don't know how much time it's gonna take
     } catch (err) {
       error = err;
     }
