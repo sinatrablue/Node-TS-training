@@ -2,12 +2,13 @@ import express, { Express } from "express";
 import serveIndex from "serve-index";
 import { api } from "./api";
 import { WebServerOptions } from "./interfaces/WebServerOptions";
+import { Server, createServer } from "http";
 
 export class WebServer {
   options: WebServerOptions = {
     port: 3000,
   };
-  app: Express = express();
+  server: Server;
   constructor(options?: WebServerOptions) {
     this.options = { ...this.options, ...options }; // takes all properties in options AND in this.options and spread them into the new object
     // if some properties in options have the same key than some in this.options, those coming from options (second in the list) will take advantage
@@ -41,18 +42,37 @@ export class WebServer {
     app.use(express.static("."));
 
     app.use(serveIndex(".", { icons: true }));
+
+    this.server = createServer(app);
   }
 
   start(): Promise<void> {
-    this.app.listen(this.options.port, () => {
-      console.log(
-        "\x1b[34m%s\x1b[0m",
-        "> Server started OK ! (Port :::>  " + this.options.port
-      );
+    return new Promise<void>((resolve, reject) => {
+      this.server.once("error", (err) => {
+        console.log("err: ", err);
+        reject(err);
+      });
+      this.server.listen(this.options.port, () => {
+        console.log(
+          "\x1b[34m%s\x1b[0m",
+          "> Server started OK ! (Port :::>  " + this.options.port + ")"
+        );
+        resolve();
+      });
     });
   }
 
   stop(): Promise<void> {
-    throw new Error("Method not implemented.");
+    return new Promise<void>((resolve, reject) => {
+      this.server.close((err) => {
+        if (err) {
+          console.log("err: ", err);
+          reject(err);
+          return;
+        }
+        console.log("\x1b[34m%s\x1b[0m", "Server Closed !");
+        resolve();
+      });
+    });
   }
 }

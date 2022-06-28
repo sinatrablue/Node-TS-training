@@ -5,8 +5,8 @@ const app = express.Router();
 
 app.use("/articles", articlesRouter);
 
-app.get("/test", (req, res) => {
-  res.json({ test: "ok" });
+app.get("/ping", (req, res) => {
+  res.json({ ping: "ok" });
 });
 
 export const api = app;
