@@ -3,7 +3,7 @@ import { Article } from "./interfaces/article_router";
 const app = express.Router();
 
 const generateId = (): string => {
-  return String(Math.random());
+  return String(Math.floor(Math.random() * 1e12));
 };
 
 const articles: Article[] = [
