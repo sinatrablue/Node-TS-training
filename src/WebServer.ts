@@ -1,5 +1,6 @@
 import express from "express";
 import { createServer, Server } from "http";
+import morgan from "morgan";
 import serveIndex from "serve-index";
 import { api } from "./api";
 import { WebServerOptions } from "./interfaces/WebServerOptions";
@@ -16,6 +17,10 @@ export class WebServer {
 
     // All the config instructions come here
     const app = express();
+
+    // morgan middleware to have more web logs
+    app.use(morgan("tiny"));
+
     // configure server with a middleware
     app.use((req, res, next) => {
       // here is the middleware (callback)
