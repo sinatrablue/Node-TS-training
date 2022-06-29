@@ -3,9 +3,11 @@ import { Article } from "./interfaces/article_router";
 import { MariaDBService } from "./services/MariaDBService";
 const app = express.Router();
 
-const generateId = (): string => {
-  return String(Math.floor(Math.random() * 1e12));
-};
+/**
+  const generateId = (): string => {
+    return String(Math.floor(Math.random() * 1e12));
+  };
+*/
 
 const articles: Article[] = [
   { id: "0", name: "flat bottomed wok", price: 15 },

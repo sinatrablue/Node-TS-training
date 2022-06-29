@@ -17,6 +17,7 @@ export class WebServer {
 
     // All the config instructions come here
     const app = express();
+    this.server = createServer(app);
 
     // morgan middleware to have more web logs
     app.use(morgan("tiny"));
@@ -28,7 +29,7 @@ export class WebServer {
       next(); // this middleware forwards to the following one (transition)
     });
 
-    app.use("/api", api);
+    app.use("/api", api(this.server));
 
     app.use("/url1/url2", (req, res, next) => {
       // here is the middleware (callback)
@@ -48,8 +49,6 @@ export class WebServer {
     app.use(express.static("."));
 
     app.use(serveIndex(".", { icons: true }));
-
-    this.server = createServer(app);
   }
 
   start(): Promise<void> {

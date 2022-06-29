@@ -2,7 +2,7 @@ import assert from "assert";
 import axios from "axios";
 import { Article } from "../src/interfaces/article_router";
 import { WebServer } from "../src/WebServer";
-import { newArticle } from "./data/articles.data";
+//import { newArticle } from "./data/articles.data";
 
 const url = "http://localhost:23456/api/articles";
 
