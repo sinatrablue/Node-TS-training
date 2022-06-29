@@ -33,19 +33,18 @@ describe("WebServer", () => {
     assert(articles.length === 0);
   });
 
-  it.only("should delete one article", async () => {
-    // Add 1 article and delete it
+  it("should delete one article", async () => {
+    // add 1 article and delete it.
     let response = await axios.post(url, newArticle);
     const id = (response.data as { id: string }).id;
-    console.log("id: ", id);
-    assert(id); // check presence
+    assert(id);
 
     response = await axios.delete(url + "/" + id);
     assert(response.status === 204);
 
-    response = await axios.get(url + "/" + id, { validateStatus: null });
-    console.log("response: ", response.status);
-
+    response = await axios.get(url + "/" + id, {
+      validateStatus: null,
+    });
     assert(response.status === 404);
   });
 });

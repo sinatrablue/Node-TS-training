@@ -1,5 +1,6 @@
 import express from "express";
 import { Article } from "./interfaces/article_router";
+import { MariaDBService } from "./services/MariaDBService";
 const app = express.Router();
 
 const generateId = (): string => {
@@ -13,33 +14,49 @@ const articles: Article[] = [
   { id: "3", name: "long facing heaven", price: 5 },
 ];
 
+const service = new MariaDBService();
+
 app.get("/", (req, res) => {
-  res.json(articles);
+  (async () => {
+    try {
+      const articles = await service.retrieveAllArticle();
+      res.json(articles);
+    } catch (err) {
+      console.log("err :::> ", err);
+      res.status(500).end();
+    }
+  })();
 });
 
 app.get("/:id", (req, res) => {
-  const id = req.params.id;
-  const art = articles.find((a) => a.id === id);
-  if (art === undefined) {
-    res.status(404).end();
-    return;
-  } else {
-    res.json(art);
-  }
+  (async () => {
+    try {
+      const id = req.params.id;
+      const art = await service.retrieveOneArticle(id);
+      if (art === undefined) {
+        res.status(404).end();
+        return;
+      } else {
+        res.json(art);
+      }
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  })();
 });
 
 app.use(express.json());
 
 app.post("/", (req, res) => {
-  try {
-    const art = req.body as Article; // We suppose that it's an Article, no checks gonna be made
-    art.id = generateId();
-    articles.push(art);
-    res.status(200).json({ id: art.id });
-  } catch (err) {
-    console.log("err :::> ", err);
-    res.status(500).end();
-  }
+  (async () => {
+    try {
+      const article = req.body as Article;
+      const { id } = await service.createOneArticle(article);
+      res.status(201).json({ id });
+    } catch (err) {
+      console.log("err: ", err);
+    }
+  })();
 });
 
 app.delete("/", (req, res) => {
