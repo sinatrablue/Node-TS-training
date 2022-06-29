@@ -1,19 +1,29 @@
 import express from "express";
 import { Article } from "./interfaces/article_router";
-import { MariaDBService } from "./services/MariaDBService";
 import { Server } from "http";
+import { SequelizeService } from "./services/SequalizeService";
 
 export const articlesRouter = (server: Server) => {
+  const service = new SequelizeService(server);
+
+  let isReady = false;
+  (async () => {
+    await service.init();
+    isReady = true;
+  })();
+
   const app = express.Router();
 
-  const articles: Article[] = [
-    { id: "0", name: "flat bottomed wok", price: 15 },
-    { id: "1", name: "sesame oil 1L", price: 12 },
-    { id: "2", name: "sichuan peppercorns", price: 3.5 },
-    { id: "3", name: "long facing heaven", price: 5 },
-  ];
-
-  const service = new MariaDBService(server);
+  app.use((req, res, next) => {
+    if (isReady) {
+      next();
+    }
+    service.eventEmmitter.on("isReady", () => {
+      console.log("received isReady");
+      isReady = true;
+      next();
+    });
+  });
 
   app.get("/", (req, res) => {
     (async () => {

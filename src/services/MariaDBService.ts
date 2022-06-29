@@ -1,11 +1,12 @@
 import { Article, NewArticle } from "../interfaces/article_router";
 import { Server } from "http";
-
 import mariadb, { Pool } from "mariadb";
-export class MariaDBService {
+import { AbstractService } from "./AbstractService";
+export class MariaDBService extends AbstractService {
   pool: Pool;
 
-  constructor(private server: Server) {
+  constructor(server: Server) {
+    super(server);
     // up: en déclarant avec de la visibilité ça devient un attribut de la classe
     this.pool = mariadb.createPool({
       port: Number(process.env.MYDB_PORT || 3306),
@@ -21,7 +22,9 @@ export class MariaDBService {
     });
   }
 
-  async createOneArticle(article: NewArticle): Promise<{ id: string }> {
+  override async createOneArticle(
+    article: NewArticle
+  ): Promise<{ id: string }> {
     let conn;
     try {
       conn = await this.pool.getConnection();
@@ -40,7 +43,7 @@ export class MariaDBService {
     }
   }
 
-  async deleteOneArticle(id: string): Promise<void> {
+  override async deleteOneArticle(id: string): Promise<void> {
     let conn;
     try {
       conn = await this.pool.getConnection();
@@ -55,7 +58,7 @@ export class MariaDBService {
     }
   }
 
-  async deleteAllArticle() {
+  override async deleteAllArticle() {
     let conn;
     try {
       conn = await this.pool.getConnection();
@@ -70,7 +73,7 @@ export class MariaDBService {
     }
   }
 
-  async retrieveAllArticle(): Promise<Article[]> {
+  override async retrieveAllArticle(): Promise<Article[]> {
     let conn;
     try {
       conn = await this.pool.getConnection();
@@ -87,7 +90,7 @@ export class MariaDBService {
     }
   }
 
-  async retrieveOneArticle(id: string): Promise<Article | undefined> {
+  override async retrieveOneArticle(id: string): Promise<Article | undefined> {
     let conn;
     try {
       conn = await this.pool.getConnection();
