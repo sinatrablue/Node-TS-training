@@ -5,7 +5,7 @@ import { Server } from "http";
 export const api = (server: Server) => {
   const app = express.Router();
 
-  app.use("/articles", articlesRouter);
+  app.use("/articles", articlesRouter(server));
 
   app.get("/ping", (req, res) => {
     res.json({ ping: "ok" });

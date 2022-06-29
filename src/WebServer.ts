@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Express } from "express";
 import { createServer, Server } from "http";
 import morgan from "morgan";
 import serveIndex from "serve-index";
@@ -10,15 +10,18 @@ export class WebServer {
     port: 3000,
   };
   server: Server;
+  app: Express;
 
   constructor(options?: WebServerOptions) {
     this.options = { ...this.options, ...options }; // takes all properties in options AND in this.options and spread them into the new object
     // if some properties in options have the same key than some in this.options, those coming from options (second in the list) will take advantage
 
-    // All the config instructions come here
-    const app = express();
-    this.server = createServer(app);
+    this.app = express();
+    this.server = createServer(this.app);
+  }
 
+  init() {
+    const app = this.app;
     // morgan middleware to have more web logs
     app.use(morgan("tiny"));
 
@@ -53,6 +56,7 @@ export class WebServer {
 
   start(): Promise<void> {
     return new Promise<void>((resolve, reject) => {
+      this.init();
       this.server.once("error", (err) => {
         console.log("err: ", err);
         reject(err);

@@ -19,8 +19,8 @@ describe("WebServer", () => {
   it("should delete all articles", async () => {
     // Add 2 articles
     // Delete all articles
-    await axios.post(url, newArticle);
-    await axios.post(url, newArticle);
+    await axios.post<{ id: string }>(url, newArticle);
+    await axios.post<{ id: string }>(url, newArticle);
 
     let response = await axios.get(url);
     let articles = response.data as Article[];
@@ -36,15 +36,14 @@ describe("WebServer", () => {
   it("should delete one article", async () => {
     // add 1 article and delete it.
     let response = await axios.post(url, newArticle);
-    const id = (response.data as { id: string }).id;
+    console.log("response: ", response);
+    const { id } = response.data;
     assert(id);
 
-    response = await axios.delete(url + "/" + id);
-    assert(response.status === 204);
+    response = await axios.delete<Article>(url + "/" + id);
+    assert(response.status == 204);
 
-    response = await axios.get(url + "/" + id, {
-      validateStatus: null,
-    });
+    response = await axios.get(url + "/" + id, { validateStatus: null });
     assert(response.status === 404);
   });
 });
