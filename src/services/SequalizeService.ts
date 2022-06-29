@@ -26,45 +26,78 @@ export class SequelizeService extends AbstractService {
     return { id: String(id) };
   }
 
-  deleteAllArticle(): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteAllArticle(): Promise<void> {
+    try {
+      await ArticleModel.destroy({ where: {}, truncate: false });
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
   }
 
-  deleteOneArticle(id: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async deleteOneArticle(id: string): Promise<void> {
+    try {
+      await ArticleModel.destroy({ where: { id: id } });
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
   }
 
   async init() {
+    let alreadyClosed = false;
     try {
+      this.server.once("close", () => {
+        (async () => {
+          alreadyClosed = true;
+          await this.sequelize.close();
+        })();
+      });
       console.log("About to connect to DB...");
+      if (alreadyClosed) {
+        return;
+      }
       await this.sequelize.authenticate();
       console.log("Successfully connected to DB");
       this.#init();
       await this.sequelize.sync({ force: false });
-      this.server.once("close", () => {
-        (async () => {
-          await this.sequelize.close();
-        })();
-      });
       this.eventEmmitter.emit("isReady");
     } catch (err) {
       console.log("err: ", err);
+      throw err;
     }
   }
 
-  retrieveAllArticle(): Promise<Article[]> {
-    throw new Error("Method not implemented.");
+  async retrieveAllArticle(): Promise<Article[]> {
+    try {
+      const result = await ArticleModel.findAll();
+      console.log("result: ", result);
+      const articles = result.map((am) => {
+        const json = am.toJSON();
+        const article = { ...json, id: String(json.id) };
+        return article;
+      });
+      return articles;
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
+    }
   }
 
   async retrieveOneArticle(id: string): Promise<Article | undefined> {
-    const result = await ArticleModel.findByPk(id);
-    console.log("result: ", result);
-    if (result === null) {
-      return undefined;
+    try {
+      const result = await ArticleModel.findByPk(id);
+      console.log("result: ", result);
+      if (result === null) {
+        return undefined;
+      }
+      const json = result.toJSON();
+      const article = { ...json, id: String(json.id) };
+      console.log("article: ", article);
+      return article as Article;
+    } catch (err) {
+      console.log("err: ", err);
+      throw err;
     }
-    const json = result.toJSON();
-    const article = { ...json, id: String(json.id) };
-    console.log("article: ", article);
-    return article as Article;
   }
 }
